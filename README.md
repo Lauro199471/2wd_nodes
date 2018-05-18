@@ -1,2 +1,2 @@
-# 2wd_nodes
-Nodes for the 2dd Robot
+# Xbox_Pan_and_Tilt
+Use an Xbox Controller to control a Pan and Tilt Servo Setup
