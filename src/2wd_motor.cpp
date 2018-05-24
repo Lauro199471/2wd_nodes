@@ -1,11 +1,24 @@
-/*
- *  Ideal Freq: 5-20 KHz
- *  Left Wheel A: PWM 0
- *  Left Wheel B: PWM 1
- *
- *  Right Wheel A: PWM 2
- *  Right Wheel A: PWM 3
-*/
+/**********************************************************************;
+* Project           : Two Wheel Robot
+*
+* Program name      : 2wd_motor.cpp
+*
+* Author            : Lauro Cabral
+*
+* Date created      : May 24 , 2018
+*
+* Purpose           : Motor Motion code for a simple ROS project
+*
+* Revision History  : 0.1
+*
+* Notes             :
+*                     Ideal Motor Freq: 5-20 KHz
+*
+*                     Left Wheel A  : PWM 0
+*                     Left Wheel B  : PWM 1
+*                     Right Wheel A : PWM 2
+*                     Right Wheel A : PWM 3
+**********************************************************************/
 
 #include<ros/ros.h>   // Include ROS Library
 #include <wiringPi.h> // Include wiringPi Library
@@ -49,6 +62,9 @@
 
 using namespace std;
 
+// ===================================
+//        Motor Motion Functions
+// ===================================
 void forward(unsigned int microseconds)
 {
   // Left Wheel
@@ -65,6 +81,25 @@ void forward(unsigned int microseconds)
   pwmWrite(PIN_BASE + PWM_ALL, MIN_PWM);
 }
 
+void backward(unsigned int microseconds)
+{
+  // Left Wheel
+  pwmWrite(PIN_BASE + PWM_0 , MIN_PWM);
+  pwmWrite(PIN_BASE + PWM_1 , MAX_PWM);
+
+  // Right Wheel
+  pwmWrite(PIN_BASE + PWM_2 , MIN_PWM);
+  pwmWrite(PIN_BASE + PWM_3 , MAX_INPUT);
+
+  usleep(microseconds * 1000);
+
+  // OFF
+  pwmWrite(PIN_BASE + PWM_ALL, MIN_PWM);
+}
+
+// ===================================
+//           Main Functions
+// ===================================
 int main(int argc, char **argv)
 {
   unsigned int mSec;
@@ -92,7 +127,9 @@ int main(int argc, char **argv)
     cout << "Enter Mirco-seconds: ";
     cin >> mSec;
     forward(mSec);
-    cout << "\tDONE\n";
+    cout << "\tForward DONE\n";
+    backwards(mSec);
+    cout << "\tBackwards DONW\n";
     ros::spinOnce();
     r.sleep();
 
