@@ -47,7 +47,7 @@ using namespace std;
 void forward(unsigned int microseconds)
 {
   // Left Wheel
-  pwmWrite(PIN_BASE + PWM_0 , MAX_PWM);
+  pwmWrite(PIN_BASE + PWM_0 + PWM_3 , MAX_PWM);
 
   usleep(microseconds * 1000);
 
