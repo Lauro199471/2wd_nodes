@@ -1,9 +1,10 @@
 /*
  *  Ideal Freq: 5-20 KHz
- *  ONE_A_GPIO : GPIO 5 (Pin 29)
- *  ONE_B_GPIO : GPIO 6 (Pin 31)
- *  TWO_A_GPIO : GPIO 19 (Pin 35)
- *  TWO_B_GPIO : GPIO 26 (Pin 37)w
+ *  Left Wheel A: PWM 0
+ *  Left Wheel B: PWM 1
+ *
+ *  Right Wheel A: PWM 2
+ *  Right Wheel A: PWM 3
 */
 
 #include<ros/ros.h>   // Include ROS Library
@@ -21,7 +22,10 @@
 #define ON 1
 
 #define PIN_BASE 100
+
 #define MAX_PWM 4095 // 12-bit Pwm
+#define MIN_PWM 0
+
 #define NUM_PINS 16  // PCA9685 has 16 pwm pins
 #define HERTZ 10000  // 10Khz
 
@@ -41,6 +45,7 @@
 #define PWM_13 13
 #define PWM_14 14
 #define PWM_15 15
+#define PWM_ALL 16
 
 using namespace std;
 
@@ -48,12 +53,16 @@ void forward(unsigned int microseconds)
 {
   // Left Wheel
   pwmWrite(PIN_BASE + PWM_0 , MAX_PWM);
-  pwmWrite(PIN_BASE + PWM_3 , MAX_PWM);
+  pwmWrite(PIN_BASE + PWM_1 , MIN_PWM);
+
+  // Right Wheel
+  pwmWrite(PIN_BASE + PWM_2 , MAX_PWM);
+  pwmWrite(PIN_BASE + PWM_3 , MIN_PWM);
 
   usleep(microseconds * 1000);
 
   // OFF
-   pwmWrite(PIN_BASE + 16, 0);
+  pwmWrite(PIN_BASE + PWM_ALL, MIN_PWM);
 }
 
 int main(int argc, char **argv)
@@ -89,12 +98,8 @@ int main(int argc, char **argv)
 
   }
 
-  // Left Wheel
-  digitalWrite(ONE_A_GPIO , OFF);
-  digitalWrite(ONE_B_GPIO , OFF);
-  // Right Wheel
-  digitalWrite(TWO_A_GPIO , OFF);
-  digitalWrite(TWO_B_GPIO , OFF);
+  // OFF
+  pwmWrite(PIN_BASE + PWM_ALL, MIN_PWM);
 
   return 0;
 }
