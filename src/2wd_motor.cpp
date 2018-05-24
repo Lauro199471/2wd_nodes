@@ -89,7 +89,7 @@ void backward(unsigned int microseconds)
 
   // Right Wheel
   pwmWrite(PIN_BASE + PWM_2 , MIN_PWM);
-  pwmWrite(PIN_BASE + PWM_3 , MAX_INPUT);
+  pwmWrite(PIN_BASE + PWM_3 , MAX_PWM);
 
   usleep(microseconds * 1000);
 
