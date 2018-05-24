@@ -10,6 +10,13 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 
+# Create a list with all .cpp source files
+set( project_sources
+   main.cpp
+   hello.cpp
+)
+
+
 find_package(Boost REQUIRED COMPONENTS system)
 FIND_LIBRARY(WIRINGPI_LIBRARY wiringPi /opt/wiringPi)
 
@@ -24,21 +31,23 @@ catkin_package(
 ###########
 ## Build ##
 ###########
-
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(${catkin_INCLUDE_DIRS} ${WIRINGPI_LIBRARY})
 
 ## Declare a cpp executable
-add_executable(2wd_motor src/2wd_motor.cpp)
+add_executable(2wd_motor src/2wd_motor.cpp src/pca9685.cpp)
+add_executable(2wd_pwm_module src/2wd_pwm_module.cpp)
 
 ## Add cmake target dependencies of the executable/library
 add_dependencies(2wd_motor 2wd_nodes_generate_messages_cpp wiringPi)
+add_dependencies(2wd_pwm_module 2wd_nodes_generate_messages_cpp wiringPi)
 
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(2wd_motor  ${catkin_LIBRARIES} ${WIRINGPI_LIBRARY})
+target_link_libraries(2wd_pwm_module  ${catkin_LIBRARIES} ${WIRINGPI_LIBRARY})
 
 
 

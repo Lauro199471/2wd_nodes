@@ -1,4 +1,5 @@
 /*
+ *  Ideal Freq: 5-20 KHz
  *  ONE_A_GPIO : GPIO 5 (Pin 29)
  *  ONE_B_GPIO : GPIO 6 (Pin 31)
  *  TWO_A_GPIO : GPIO 19 (Pin 35)
@@ -9,6 +10,7 @@
 #include <wiringPi.h> // Include wiringPi Library
 #include <iostream>
 #include <unistd.h>
+#include "pca9685.h"
 
 #define ONE_A_GPIO 5
 #define ONE_B_GPIO 6
@@ -18,24 +20,39 @@
 #define OFF 0
 #define ON 1
 
+#define PIN_BASE 100
+#define MAX_PWM 4095 // 12-bit Pwm
+#define NUM_PINS 16  // PCA9685 has 16 pwm pins
+#define HERTZ 10000  // 10Khz
+
+#define PWM_0 0
+#define PWM_1 1
+#define PWM_2 2
+#define PWM_3 3
+#define PWM_4 4
+#define PWM_5 5
+#define PWM_6 6
+#define PWM_7 7
+#define PWM_8 8
+#define PWM_9 9
+#define PWM_10 10
+#define PWM_11 11
+#define PWM_12 12
+#define PWM_13 13
+#define PWM_14 14
+#define PWM_15 15
+
 using namespace std;
 
 void forward(unsigned int microseconds)
 {
   // Left Wheel
-  digitalWrite(ONE_A_GPIO , ON);
-  digitalWrite(ONE_B_GPIO , OFF);
-  // Right Wheel
-  digitalWrite(TWO_A_GPIO , ON);
-  digitalWrite(TWO_B_GPIO , OFF);
+  pwmWrite(PIN_BASE + PWM_0 , MAX_PWM);
 
   usleep(microseconds * 1000);
 
-  // Left Wheel
-  digitalWrite(ONE_A_GPIO , OFF);
-  // Right Wheel
-  digitalWrite(TWO_A_GPIO , OFF);
-
+  // OFF
+   pwmWrite(PIN_BASE + 16, 0);
 }
 
 int main(int argc, char **argv)
@@ -47,14 +64,15 @@ int main(int argc, char **argv)
   // when this compiled code is run, ROS will recognize it as a node called "minimal_wiringPi"
 
   ros::NodeHandle n; // need this to establish communications with our new node
+  int fd = pca9685Setup(PIN_BASE, 0x40, HERTZ);
 
+  if (fd < 0)
+  {
+    printf("Error in setup\n");
+    return fd;
+  }
 
-  wiringPiSetupGpio(); // Initalize Pi
-
-  pinMode(ONE_A_GPIO, OUTPUT);
-  pinMode(ONE_B_GPIO, OUTPUT);
-  pinMode(TWO_A_GPIO, OUTPUT);
-  pinMode(TWO_B_GPIO, OUTPUT);
+  pca9685PWMReset(fd);
 
   ros::Rate r(1000); // 1 khz for spin (Industry Standard)
 
