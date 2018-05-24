@@ -3,7 +3,7 @@
 *
 * Program name      : 2wd_motor.cpp
 *
-* Author            : Lauro Cabral
+* Engineer          : Lauro Cabral
 *
 * Date created      : May 24 , 2018
 *
@@ -128,7 +128,7 @@ int main(int argc, char **argv)
     cin >> mSec;
     forward(mSec);
     cout << "\tForward DONE\n";
-    backwards(mSec);
+    backward(mSec);
     cout << "\tBackwards DONW\n";
     ros::spinOnce();
     r.sleep();
